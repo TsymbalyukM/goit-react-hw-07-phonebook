@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from 'nanoid';
 import { Form, Label, Button, Input } from './ContactForm.styled';
-import { addContacts } from 'redux/ContactSlice';
+import { addContact } from 'redux/operations';
 import { selectContacts } from 'redux/selectors';
 
 const ContactForm = () => {
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setNumber] = useState('');
 
   const contacts = useSelector(selectContacts);
   const dispatch = useDispatch();
@@ -26,7 +26,7 @@ const ContactForm = () => {
       alert(`${name} is already in contacts`);
       return;
     }
-    dispatch(addContacts({ id: nanoid(), name: name, number: number }));
+    dispatch(addContact({ id: nanoid(), name: name, number: phone }));
 
     setName('');
     setNumber('');
@@ -65,7 +65,7 @@ const ContactForm = () => {
         <Input
           type="tel"
           name="number"
-          value={number}
+          value={phone}
           onChange={handleChange}
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"

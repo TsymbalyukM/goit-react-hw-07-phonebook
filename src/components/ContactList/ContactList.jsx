@@ -1,55 +1,53 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { List, Item, Button } from './ContactList.styled';
-import { deleteContacts } from 'redux/ContactSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts, selectFilter } from 'redux/selectors';
+import {
+  selectError,
+  selectFilterContacts,
+  selectIsLoading,
+} from 'redux/selectors';
+import { fetchContacts, deleteContact } from 'redux/operations';
 
 const ContactList = () => {
-  const contacts = useSelector(selectContacts);
-  const filter = useSelector(selectFilter);
+  const filteredContacts = useSelector(selectFilterContacts);
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
   const dispatch = useDispatch();
 
-
-
-  // const getVisibleContacts = () => {
-  //   const normalizedFilter = filter.toLowerCase();
-  //   return contacts.filter(contact =>
-  //     contact.name.toLowerCase().includes(normalizedFilter)
-  //   );
-  // };
-
-  const getVisibleContacts = () => {
-    return contacts.filter(contact => {
-      if (contact.name) {  // Перевірка на наявність властивості 'name'
-        return contact.name.toLowerCase().includes(filter.toLowerCase());
-      }
-      return false;  // або return true, якщо ви хочете включити такі контакти
-    });
-  };
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   const removeContact = contactId => {
-    dispatch(deleteContacts(contactId));
+    dispatch(deleteContact(contactId));
   };
 
-  const visibleContacts = getVisibleContacts();
-  if (visibleContacts.length === 0) return null;
   return (
-    <List>
-      {visibleContacts.map(contact => (
-        <Item key={contact.id}>
-          {contact.name + ' : ' + contact.number}
-          {
-            <Button
-              type="button"
-              name="delete"
-              onClick={() => removeContact(contact.id)}
-            >
-              delete
-            </Button>
-          }
-        </Item>
-      ))}
-    </List>
+    <div>
+      {isLoading}
+
+      {!filteredContacts?.length && !error && !isLoading && (
+        <p>No contacts found.</p>
+      )}
+
+      {error && <p>{error}</p>}
+      <List>
+        {filteredContacts.map(contact => (
+          <Item key={contact.id}>
+            {contact.name + ' : ' + contact.phone}
+            {
+              <Button
+                type="button"
+                name="delete"
+                onClick={() => removeContact(contact.id)}
+              >
+                delete
+              </Button>
+            }
+          </Item>
+        ))}
+      </List>
+    </div>
   );
 };
 
