@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { List, Item, Button } from './ContactList.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -6,7 +6,7 @@ import {
   selectFilterContacts,
   selectIsLoading,
 } from 'redux/selectors';
-import { fetchContacts, deleteContact } from 'redux/operations';
+import { deleteContact } from 'redux/operations';
 
 const ContactList = () => {
   const filteredContacts = useSelector(selectFilterContacts);
@@ -14,9 +14,6 @@ const ContactList = () => {
   const error = useSelector(selectError);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
 
   const removeContact = contactId => {
     dispatch(deleteContact(contactId));
