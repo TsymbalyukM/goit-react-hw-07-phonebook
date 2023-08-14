@@ -7,7 +7,7 @@ import { selectContacts } from 'redux/selectors';
 
 const ContactForm = () => {
   const [name, setName] = useState('');
-  const [phone, setNumber] = useState('');
+  const [phone, setPhone] = useState('');
 
   const contacts = useSelector(selectContacts);
   const dispatch = useDispatch();
@@ -29,7 +29,7 @@ const ContactForm = () => {
     dispatch(addContact({ id: nanoid(), name: name, number: phone }));
 
     setName('');
-    setNumber('');
+    setPhone('');
   };
 
   const handleChange = event => {
@@ -39,7 +39,7 @@ const ContactForm = () => {
         setName(value);
         break;
       case 'number':
-        setNumber(value);
+        setPhone(value);
         break;
       default:
         break;
